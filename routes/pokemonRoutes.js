@@ -4,7 +4,7 @@ var Pokemon = require('../models/pokemon');
 var Type = require('../models/type');
 var Move = require('../models/move');
 var Abilities = require('../models/abilities');
-
+var Evolution = require('../models/evolution');
 
 
 router.post('/', async function (req, res, next) {
@@ -103,5 +103,48 @@ router.get('/type/:name', async function (req, res, next) {
         res.status(500).json({ message: error.message });
     }
 });
+
+
+
+router.get('/:id/stats', async function (req, res, next) {
+    try {
+        // Tìm Pokémon theo ID và chỉ lấy phần base_stats
+        const pokemon = await Pokemon.findById(req.params.id, 'base_stats');
+        if (!pokemon) {
+            return res.status(404).json({ message: 'Pokemon not found' });
+        }
+        res.status(200).json(pokemon.base_stats);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Endpoint để lấy weaknesses của Pokemon theo tên
+router.get('/:name/weaknesses', async function (req, res) {
+    try {
+        // Tìm Pokémon theo tên
+        const pokemon = await Pokemon.findOne({ name: req.params.name });
+        
+        if (!pokemon) {
+            return res.status(404).json({ message: 'Pokemon not found' });
+        }
+
+        // Lấy danh sách các loại của Pokémon
+        const pokemonTypes = pokemon.type;
+
+        // Tìm weaknesses từ bảng Type dựa trên các loại của Pokémon
+        const weaknesses = await Type.find({ name: { $in: pokemonTypes } })
+            .select('weaknesses -_id'); // Chỉ lấy trường weaknesses
+
+        // Gộp tất cả weaknesses từ nhiều loại thành một mảng duy nhất
+        const combinedWeaknesses = weaknesses.flatMap(type => type.weaknesses);
+
+        res.status(200).json({ weaknesses: combinedWeaknesses });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require('express');
-const Type = require('../models/type'); // Assuming you have a Type model
+const Type = require('../models/type');
+var Pokemon = require('../models/pokemon'); // Assuming you have a Type model
 
 const router = express.Router();
 
@@ -15,18 +16,8 @@ router.get('/types', async function (req, res, next) {
     }
 });
 
-// Route to get weaknesses of a specific type
-router.get('/weaknesses/:name', async function (req, res, next) {
-    try {
-        const typeName = req.params.name;
-        const type = await Type.findOne({ name: typeName });
-        if (!type) {
-            return res.status(404).json({ message: 'Type not found' });
-        }
-        res.status(200).json(type.weaknesses);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+
+
+
 
 module.exports = router;

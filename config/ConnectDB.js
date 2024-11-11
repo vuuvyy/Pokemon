@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', true);
 
-const atlat = "mongodb+srv://Sainoo19:Sup151151@pokedex.c2vo3.mongodb.net/PokeDexDB?retryWrites=true&w=majority&appName=PokeDex"; // Thay <password> bằng mật khẩu của bạn
+const atlat = "mongodb+srv://vuvy0405:gcAboilr7qGJ5W53@cluster.kudk1.mongodb.net/PokeDexDB?retryWrites=true&w=majority&appName=PokeDex"; // Thay <password> bằng mật khẩu của bạn
 // const atlat = "mongodb+srv://Sainoo19:Sup151151@pokedex.c2vo3.mongodb.net/PokeDex_DB";
 const connect = async () => {
     try {
