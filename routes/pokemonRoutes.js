@@ -105,7 +105,6 @@ router.get('/type/:name', async function (req, res, next) {
 });
 
 
-
 router.get('/:id/stats', async function (req, res, next) {
     try {
         // Tìm Pokémon theo ID và chỉ lấy phần base_stats
@@ -140,6 +139,26 @@ router.get('/:name/weaknesses', async function (req, res) {
         const combinedWeaknesses = weaknesses.flatMap(type => type.weaknesses);
 
         res.status(200).json({ weaknesses: combinedWeaknesses });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+// Endpoint để lấy moves của Pokemon theo tên
+router.get('/:name/moves', async function (req, res) {
+    try {
+        // Tìm Pokémon theo tên
+        const pokemon = await Pokemon.findOne({ name: req.params.name });
+        
+        if (!pokemon) {
+            return res.status(404).json({ message: 'Pokemon not found' });
+        }
+
+        // Lấy danh sách moves từ Pokémon
+        const moves = pokemon.moves;
+
+        res.status(200).json({ moves });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
